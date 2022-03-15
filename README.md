@@ -39,3 +39,17 @@
 --eventlet 
 --psycopg2 
 --PostgreSQL
+
+
+Создание БД
+
+cd tournamentsDB
+python3 script.py
+
+Запуск сервера Flask
+
+python3 server.py
+
+Запуск React
+
+npm start
