@@ -1,6 +1,7 @@
 #!usr/bin/python3
 import psycopg2
-from flask import Flask
+from flask import Flask, current_app, request
+from flask_cors import CORS, cross_origin
 import socketio
 import eventlet
 import os
@@ -9,6 +10,15 @@ import sys
 from datetime import datetime
 import actionsForAdmin
 import actionsForUser
+import createRound
+
+
+APP = Flask(__name__)
+
+
+app_context = APP.app_context()
+app_context.push()
+print(current_app.name)
 
 with open('serverConfig.json') as json_data_file:
     data_server = json.load(json_data_file)
@@ -17,10 +27,17 @@ SERVER = data_server.get('server')
 psql = data_server['postgreSQL']
 serv = data_server['server']
 
-APP = Flask(__name__)
-SIO = socketio.Server()
 
+
+
+SIO = socketio.Server(cors_allowed_origins='*')
+
+
+cors = CORS(resources={r"/*":{"origins": "*"}})
 actionsForAdmin.createAdmin(data_server)
+
+
+@cross_origin(SIO, APP)
 
 def createConnect():
     try:
